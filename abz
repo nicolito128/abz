@@ -3,8 +3,9 @@
 import argparse
 import sys
 
-from rw_bytes import Bytes
-from zcodecs import Codec, WordMap
+from ioz import ReadWriteCloser, Bytes, File
+from codecz import Codec, WordMap
+
 
 CODECS: dict[str, type[Codec]] = {
     "wordmap": WordMap,
@@ -13,13 +14,13 @@ CODECS: dict[str, type[Codec]] = {
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="ABZ: compresor de archivos")
-    parser.add_argument("-codec", required=True, choices=CODECS,
+    _ = parser.add_argument("-codec", required=True, choices=CODECS,
                         help="algoritmo a utilizar")
-    parser.add_argument("-i", required=True, metavar="FILE",
+    _ = parser.add_argument("-i", metavar="FILE",
                         help="archivo de entrada")
-    parser.add_argument("-o", metavar="FILE",
+    _ = parser.add_argument("-o", metavar="FILE",
                         help="archivo de salida (si se omite, imprime en consola)")
-    parser.add_argument("-d", action="store_true",
+    _ = parser.add_argument("-d", action="store_true",
                         help="decodificar en lugar de codificar")
     return parser.parse_args()
 
@@ -28,20 +29,30 @@ def main() -> None:
     args = parse_args()
     codec = CODECS[args.codec]()
 
-    with open(args.i, "rb") as f:
-        src = Bytes(f.read())
-    dst = Bytes()
+    src : ReadWriteCloser
+    if args.i:
+        src = File(args.i)
+    else:
+        in_data = input().encode()
+        src = Bytes(in_data)
+
+    dst : ReadWriteCloser
+    if args.o:
+        dst = File(args.o, "wb")
+    else:
+        dst = Bytes()
 
     if args.d:
-        codec.decode(dst, src)
+        _ = codec.decode(dst, src)
     else:
-        codec.encode(dst, src)
+        _ = codec.encode(dst, src)
 
-    if args.o:
-        with open(args.o, "wb") as f:
-            f.write(dst.data())
-    else:
-        sys.stdout.buffer.write(dst.data())
+
+    match dst:
+        case Bytes():
+            _ = sys.stdout.buffer.write(dst.data())
+        case _:
+            pass
 
 
 if __name__ == "__main__":

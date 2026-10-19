@@ -30,9 +30,8 @@ muy cortas o con pocas repeticiones puede resultar ineficiente.
 
 import re
 
-from reader import Reader
-from writer import Writer
-from .codec import Codec
+from ioz import Writer, Reader
+from codecz import Codec
 
 
 # Regexp para las palabras
@@ -54,10 +53,11 @@ class WordMap(Codec):
         indexes = [ids.setdefault(t, len(ids)) for t in _TOKEN.findall(text)]
 
         out = bytearray(self._varint(len(ids)))
-        for word in ids:  # conserva el orden de inserción
+        for word in ids:
             raw = word.encode("utf-8")
             out += self._varint(len(raw)) + raw
         out += self._varint(len(indexes))
+
         for i in indexes:
             out += self._varint(i)
 

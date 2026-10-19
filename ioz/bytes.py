@@ -1,12 +1,13 @@
 """
-Módulo con clases y funciones útiles para trabajar con streams de bytes.
+Implementación io.ReadWriteCloser para el trabajo con array de bytes en memoria.
 """
 
-from reader import ReadCloser
-from writer import WriteCloser
+from typing import override
+
+from .ioz import ReadWriteCloser
 
 
-class Bytes(ReadCloser, WriteCloser):
+class Bytes(ReadWriteCloser):
     """
     Stream de bytes en memoria, legible y escribible.
 
@@ -14,6 +15,10 @@ class Bytes(ReadCloser, WriteCloser):
     consumen desde una posición propia, así que lo escrito se puede leer
     después en el mismo orden.
     """
+
+    _buffer: bytearray
+    _pos: int
+    _closed: bool
 
     def __init__(self, data: bytes = b"") -> None:
         self._buffer = bytearray(data)
@@ -28,6 +33,7 @@ class Bytes(ReadCloser, WriteCloser):
         self._pos += len(chunk)
         return chunk
 
+    @override
     def write(self, data: bytes) -> int:
         self._check_open()
         self._buffer.extend(data)
@@ -37,9 +43,11 @@ class Bytes(ReadCloser, WriteCloser):
         """Devuelve todo el contenido del buffer, sin importar lo ya leído."""
         return bytes(self._buffer)
 
+    @override
     def close(self) -> None:
         self._closed = True
 
+    @override
     def closed(self) -> bool:
         return self._closed
 
