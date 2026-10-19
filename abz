@@ -3,7 +3,7 @@
 import argparse
 import sys
 
-from rw_bytes import BytesReader, BytesWriter
+from rw_bytes import Bytes
 from zcodecs import Codec, WordMap
 
 CODECS: dict[str, type[Codec]] = {
@@ -29,8 +29,8 @@ def main() -> None:
     codec = CODECS[args.codec]()
 
     with open(args.i, "rb") as f:
-        src = BytesReader(f.read())
-    dst = BytesWriter()
+        src = Bytes(f.read())
+    dst = Bytes()
 
     if args.d:
         codec.decode(dst, src)
