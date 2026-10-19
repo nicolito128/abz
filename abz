@@ -1,0 +1,48 @@
+#!/usr/bin/env python3
+
+import argparse
+import sys
+
+from rw_bytes import BytesReader, BytesWriter
+from zcodecs import Codec, WordMap
+
+CODECS: dict[str, type[Codec]] = {
+    "wordmap": WordMap,
+}
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="ABZ: compresor de archivos")
+    parser.add_argument("-codec", required=True, choices=CODECS,
+                        help="algoritmo a utilizar")
+    parser.add_argument("-i", required=True, metavar="FILE",
+                        help="archivo de entrada")
+    parser.add_argument("-o", metavar="FILE",
+                        help="archivo de salida (si se omite, imprime en consola)")
+    parser.add_argument("-d", action="store_true",
+                        help="decodificar en lugar de codificar")
+    return parser.parse_args()
+
+
+def main() -> None:
+    args = parse_args()
+    codec = CODECS[args.codec]()
+
+    with open(args.i, "rb") as f:
+        src = BytesReader(f.read())
+    dst = BytesWriter()
+
+    if args.d:
+        codec.decode(dst, src)
+    else:
+        codec.encode(dst, src)
+
+    if args.o:
+        with open(args.o, "wb") as f:
+            f.write(dst.data())
+    else:
+        sys.stdout.buffer.write(dst.data())
+
+
+if __name__ == "__main__":
+    main()

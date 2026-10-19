@@ -1,0 +1,19 @@
+# Environment
+*.env*
+!*.env*.example
+
+# Python
+__pycache__/
+
+# Build and temporal
+build/
+bin/
+tmp/
+*.bin
+*.enc
+*.dec
+
+# Specifics
+.vscode
+.idea
+.DS_Store
