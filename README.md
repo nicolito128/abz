@@ -11,7 +11,7 @@ ABZ es una utilidad de línea de comandos escrita en Python que permite comprimi
 Clone el repositorio e ingrese al directorio del proyecto:
 
 ```bash
-git clone <URL-del-repositorio>
+git clone https://github.com/nicolito128/abz
 cd abz
 ```
 
