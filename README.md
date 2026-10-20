@@ -1,16 +1,31 @@
 # ABZ
 
-ABZ es una utilidad escrita en Python para *comprimir* y *descomprimir* archivos con la opción de intercambiar los algoritmos que usa la herramienta.
+ABZ es una utilidad de línea de comandos escrita en Python que permite comprimir y descomprimir archivos. Su diseño admite intercambiar el algoritmo de compresión (códec) utilizado, de modo que sea posible incorporar nuevos métodos sin modificar el resto de la herramienta.
 
-## Requerimientos
+## Requisitos
 
-* Python 3.13^
+* Python 3.13 o superior
+
+## Instalación
+
+Clone el repositorio e ingrese al directorio del proyecto:
+
+```bash
+git clone <URL-del-repositorio>
+cd abz
+```
+
+No se requieren dependencias adicionales.
 
 ## Uso
 
-Clone el proyecto, ingrese al directorio y en su terminal escriba `./abz -h`:
+Para ver la ayuda del programa, ejecute en su terminal:
 
 ```bash
+./abz -h
+```
+
+```text
 usage: abz [-h] -codec {wordmap} -i FILE [-o FILE] [-d]
 
 ABZ: compresor de archivos
@@ -23,11 +38,20 @@ options:
   -d                decodificar en lugar de codificar
 ```
 
-En caso de estar en un sistema operativo Windows, use directamente el interprete de Python:
+En Windows, invoque directamente al intérprete de Python:
 
 ```bash
 python abz -h
 ```
+
+### Opciones
+
+| Opción | Descripción |
+|--------|-------------|
+| `-codec` | Algoritmo a utilizar. Actualmente disponible: `wordmap`. |
+| `-i FILE` | Archivo de entrada. Es obligatorio. |
+| `-o FILE` | Archivo de salida. Si se omite, el resultado se imprime en la consola. |
+| `-d` | Decodifica el archivo de entrada en lugar de codificarlo. |
 
 ### Ejemplo: codificar
 
@@ -35,12 +59,18 @@ python abz -h
 ./abz -codec wordmap -i tmp/example.txt -o tmp/example.abz
 ```
 
-### Ejemplo: decodificar:
+### Ejemplo: decodificar
 
 ```bash
 ./abz -codec wordmap -d -i tmp/example.abz
 ```
 
-## Relevante
+Para guardar el resultado en un archivo en lugar de mostrarlo en la consola, agregue la opción `-o`:
 
-El presente software se entrega sin garantía de ningún tipo. La finalidad última de este script es servir como código de ejemplo para la asignatura de "*Programación Orientada a Objetos*" en el IES6017.
+```bash
+./abz -codec wordmap -d -i tmp/example.abz -o tmp/example.txt
+```
+
+## Aviso
+
+Este software se entrega sin garantía de ningún tipo. Su finalidad es servir como código de ejemplo para la asignatura "*Programación Orientada a Objetos*" del IES6017.
