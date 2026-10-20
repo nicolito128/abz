@@ -54,6 +54,9 @@ def main() -> None:
         case _:
             pass
 
+    src.close()
+    dst.close()
+
 
 if __name__ == "__main__":
     main()
