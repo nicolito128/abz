@@ -13,6 +13,9 @@ tmp/
 *.enc
 *.dec
 
+# Manim
+media/
+
 # Specifics
 .vscode
 .idea
